@@ -1,28 +1,123 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonRouterLink } from '@ionic/angular/standalone';
+import {
+  Platform,
+  IonApp,
+  IonSplitPane,
+  IonMenu,
+  IonContent,
+  IonList,
+  IonListHeader,
+  IonNote,
+  IonMenuToggle,
+  IonItem,
+  IonIcon,
+  IonLabel,
+  IonRouterOutlet,
+  IonAvatar,
+  IonImg,
+  IonRouterLink,
+  NavController,
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, heartOutline, heartSharp, archiveOutline, archiveSharp, trashOutline, trashSharp, warningOutline, warningSharp, bookmarkOutline, bookmarkSharp } from 'ionicons/icons';
+import {
+  home,
+  logIn,
+  documentText,
+  checkmarkCircle,
+  images,
+  camera,
+  arrowUndoCircle,
+  add,
+  menu,
+  trash,
+  eye,
+  close,
+  exit,
+} from 'ionicons/icons';
+import { AuthService } from './auth/services/auth.service';
+import { SplashScreen } from '@capacitor/splash-screen';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { User } from './profile/interfaces/user';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule, IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterLink, IonRouterOutlet],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    IonRouterLink,
+    CommonModule,
+    IonApp,
+    IonSplitPane,
+    IonMenu,
+    IonContent,
+    IonList,
+    IonListHeader,
+    IonNote,
+    IonMenuToggle,
+    IonItem,
+    IonIcon,
+    IonLabel,
+    IonRouterOutlet,
+    IonAvatar,
+    IonImg,
+  ],
 })
 export class AppComponent {
+  user: User | null = null;
+
+  #authService = inject(AuthService);
+  #platform = inject(Platform);
+  #nav = inject(NavController);
+
   public appPages = [
-    { title: 'Inbox', url: '/folder/inbox', icon: 'mail' },
-    { title: 'Outbox', url: '/folder/outbox', icon: 'paper-plane' },
-    { title: 'Favorites', url: '/folder/favorites', icon: 'heart' },
-    { title: 'Archived', url: '/folder/archived', icon: 'archive' },
-    { title: 'Trash', url: '/folder/trash', icon: 'trash' },
-    { title: 'Spam', url: '/folder/spam', icon: 'warning' },
+    { title: 'Home', url: '/products', icon: 'home' },
+    { title: 'Añadir producto', url: '/products/add', icon: 'add' },
   ];
-  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+
   constructor() {
-    addIcons({ mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, heartOutline, heartSharp, archiveOutline, archiveSharp, trashOutline, trashSharp, warningOutline, warningSharp, bookmarkOutline, bookmarkSharp });
+    addIcons({
+      home,
+      logIn,
+      documentText,
+      checkmarkCircle,
+      images,
+      camera,
+      arrowUndoCircle,
+      add,
+      menu,
+      trash,
+      eye,
+      close,
+      exit,
+    });
+
+    effect(() => {
+      if (this.#authService.logged()) {
+        this.#authService.getProfile().subscribe((user) => (this.user = user));
+      } else {
+        this.user = null;
+      }
+    });
+
+    this.initializeApp();
+  }
+
+  async initializeApp() {
+    if (this.#platform.is('capacitor')) {
+      await this.#platform.ready();
+      SplashScreen.hide();
+      StatusBar.setBackgroundColor({ color: '#3880ff' });
+      StatusBar.setStyle({ style: Style.Dark });
+    }
+  }
+
+  async logout() {
+    await this.#authService.logout();
+    this.#nav.navigateRoot(['/auth/login']);
   }
 }
