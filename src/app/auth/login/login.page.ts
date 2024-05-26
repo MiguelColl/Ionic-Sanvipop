@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   AlertController,
   NavController,
@@ -17,6 +17,7 @@ import {
   IonCol,
   IonButton,
   IonIcon,
+  IonInputPasswordToggle,
 } from '@ionic/angular/standalone';
 import { AuthService } from '../services/auth.service';
 import { RouterLink } from '@angular/router';
@@ -28,7 +29,7 @@ import { UserLogin } from '../interfaces/auth';
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
-    FormsModule,
+    ReactiveFormsModule,
     RouterLink,
     IonRouterLink,
     IonHeader,
@@ -44,22 +45,30 @@ import { UserLogin } from '../interfaces/auth';
     IonCol,
     IonButton,
     IonIcon,
+    IonInputPasswordToggle,
   ],
 })
 export class LoginPage {
-  user: UserLogin = {
-    email: '',
-    password: '',
-    lat: 0,
-    lng: 0,
-  };
-
   #authService = inject(AuthService);
   #alertCtrl = inject(AlertController);
   #navCtrl = inject(NavController);
+  #fb = inject(NonNullableFormBuilder);
+
+  loginForm = this.#fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]],
+    lat: '0',
+    lng: '0',
+  });
 
   login() {
-    this.#authService.login(this.user).subscribe({
+    const login: UserLogin = {
+      ...this.loginForm.getRawValue(),
+      lat: +this.loginForm.value.lat!,
+      lng: +this.loginForm.value.lng!,
+    };
+
+    this.#authService.login(login).subscribe({
       next: () => this.#navCtrl.navigateRoot(['/products']),
       error: async (error) => {
         (
