@@ -30,7 +30,7 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <ion-button type="submit" color="primary" expand="block" [disabled]="loginForm.invalid">
+          <ion-button type="submit" color="success" expand="block" [disabled]="loginForm.invalid">
             <ion-icon name="log-in" slot="start"></ion-icon>
             Login
           </ion-button>
@@ -39,6 +39,20 @@
           <ion-button color="tertiary" expand="block" [routerLink]="['/auth/register']" [routerDirection]="'root'">
             <ion-icon name="document-text" slot="start"></ion-icon>
             Registrarse
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button expand="block" color="primary" (click)="googleLogin()">
+            <ion-icon name="logo-google" slot="start"></ion-icon>
+            <ion-label>Login con Google</ion-label>
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button expand="block" color="primary" fill="outline" (click)="facebookLogin()">
+            <ion-icon name="logo-facebook" slot="start"></ion-icon>
+            <ion-label>Login con Facebook</ion-label>
           </ion-button>
         </ion-col>
       </ion-row>

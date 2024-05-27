@@ -40,8 +40,8 @@ export class HomePage {
       buttons: [
         {
           text: 'Borrar',
-          role: 'destructive',
           icon: 'trash',
+          role: 'destructive',
           handler: () => {
             this.#productsService
               .deleteProduct(prod.id!)

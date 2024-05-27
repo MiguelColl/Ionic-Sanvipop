@@ -1,13 +1,97 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>product-form</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Añadir producto</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">product-form</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <form [formGroup]="productForm" (ngSubmit)="addProduct()">
+    <ion-list>
+      <ion-item>
+        <ion-input required label="Nombre del producto" labelPlacement="floating" formControlName="title"></ion-input>
+        @if (productForm.controls.title.dirty && productForm.controls.title.valid) {
+          <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
+        }
+      </ion-item>
+      @if (productForm.controls.title.touched && productForm.controls.title.errors?.['required']) {
+        <ion-label color="danger" class="errorLabel">El nombre no puede estar vacío</ion-label>
+      } @else if (productForm.controls.title.touched && productForm.controls.title.errors?.['minlength']) {
+        <ion-label color="danger" class="errorLabel">
+          Debes introducir
+          {{productForm.controls.title.errors?.['minlength'].requiredLength - productForm.controls.title.errors?.['minlength'].actualLength}}
+          carácteres más
+        </ion-label>
+      }
+
+      <ion-item>
+        <ion-input required label="Descripción" labelPlacement="floating" formControlName="description"></ion-input>
+        @if (productForm.controls.description.dirty && productForm.controls.description.valid) {
+          <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
+        }
+      </ion-item>
+      @if (productForm.controls.description.touched && productForm.controls.description.errors?.['required']) {
+        <ion-label color="danger" class="errorLabel">La descripción no puede estar vacía</ion-label>
+      }
+
+      <ion-item>
+        <ion-select required label="Categoría" label-placement="floating" interface="popover" formControlName="category">
+          @for (category of categories; track $index) {
+            <ion-select-option [value]="category.id">{{ category.name }}</ion-select-option>
+          }
+        </ion-select>
+        @if (productForm.controls.category.dirty && productForm.controls.category.valid) {
+          <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
+        }
+      </ion-item>
+      @if (productForm.controls.category.touched && productForm.controls.category.errors?.['required']) {
+        <ion-label color="danger" class="errorLabel">La categoría no puede estar vacía</ion-label>
+      }
+
+      <ion-item>
+        <ion-input type="number" min="0.01" step="0.01" required label="Precio" labelPlacement="floating" formControlName="price"></ion-input>
+        @if (productForm.controls.price.dirty && productForm.controls.price.valid) {
+          <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
+        }
+      </ion-item>
+      @if (productForm.controls.price.touched && productForm.controls.price.errors?.['required']) {
+        <ion-label color="danger" class="errorLabel">El precio no puede estar vacío</ion-label>
+      } @else if (productForm.controls.price.touched && productForm.controls.price.errors?.['min']) {
+        <ion-label color="danger" class="errorLabel">El precio debe ser mayor que 0</ion-label>
+      }
+
+      <ion-item>
+        <ion-label position="inset">Foto</ion-label>
+        <ion-button color="secondary" (click)="takePhoto()">
+          <ion-icon name="camera" slot="start"></ion-icon>
+          Camara
+        </ion-button>
+        <ion-button color="tertiary" (click)="pickFromGallery()">
+          <ion-icon name="images" slot="start"></ion-icon>
+          Galeria
+        </ion-button>
+      </ion-item>
+    </ion-list>
+    @if (imageBase64) {
+      <ion-img [src]="imageBase64"></ion-img>
+    }
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" color="primary" expand="block" [disabled]="productForm.invalid || !imageBase64">
+            <ion-icon name="add" slot="start"></ion-icon>
+            Añadir producto
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button color="danger" expand="block" fill="outline" [routerLink]="['/products']" [routerDirection]="'root'">
+            <ion-icon name="arrow-undo-circle" slot="start"></ion-icon>
+            Cancelar
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

@@ -35,11 +35,17 @@ import {
   eye,
   close,
   exit,
+  informationCircle,
+  mapSharp,
+  navigateOutline,
+  logoGoogle,
+  logoFacebook,
 } from 'ionicons/icons';
 import { AuthService } from './auth/services/auth.service';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { User } from './profile/interfaces/user';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 
 @Component({
   selector: 'app-root',
@@ -94,6 +100,11 @@ export class AppComponent {
       eye,
       close,
       exit,
+      informationCircle,
+      mapSharp,
+      navigateOutline,
+      logoGoogle,
+      logoFacebook,
     });
 
     effect(() => {
@@ -113,6 +124,7 @@ export class AppComponent {
       SplashScreen.hide();
       StatusBar.setBackgroundColor({ color: '#3880ff' });
       StatusBar.setStyle({ style: Style.Dark });
+      GoogleAuth.initialize();
     }
   }
 

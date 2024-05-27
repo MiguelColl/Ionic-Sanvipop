@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   NonNullableFormBuilder,
   ReactiveFormsModule,
@@ -30,6 +30,8 @@ import { UserRegister } from '../interfaces/auth';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { AuthService } from '../services/auth.service';
 import { ValueEqualsDirective } from 'src/app/validators/value-equals.directive';
+import { Coordinates } from 'src/app/bingmaps/coordinates';
+import { Geolocation } from '@capacitor/geolocation';
 
 @Component({
   selector: 'app-register',
@@ -59,7 +61,7 @@ import { ValueEqualsDirective } from 'src/app/validators/value-equals.directive'
     IonInputPasswordToggle,
   ],
 })
-export class RegisterPage {
+export class RegisterPage implements OnInit{
   #authService = inject(AuthService);
   #toastCtrl = inject(ToastController);
   #nav = inject(NavController);
@@ -75,6 +77,15 @@ export class RegisterPage {
   });
 
   imageBase64 = '';
+  coords?: Coordinates;
+
+  async ngOnInit() {
+    const coordinates = await Geolocation.getCurrentPosition({
+      enableHighAccuracy: true
+    });
+
+    this.coords = coordinates.coords;
+  }
 
   register() {
     const register: UserRegister = {
@@ -82,8 +93,8 @@ export class RegisterPage {
       email: this.registerForm.value.email!,
       password: this.registerForm.value.password!,
       photo: this.imageBase64,
-      lat: +this.registerForm.value.lat!,
-      lng: +this.registerForm.value.lng!,
+      lat: this.coords?.latitude ? this.coords.latitude : +this.registerForm.value.lat!,
+      lng: this.coords?.longitude ? this.coords.longitude : +this.registerForm.value.lng!,
     };
 
     this.#authService.register(register).subscribe(async () => {
@@ -91,7 +102,7 @@ export class RegisterPage {
         await this.#toastCtrl.create({
           duration: 3000,
           position: 'bottom',
-          message: 'User registered!',
+          message: '¡Usuario registrado!',
           color: 'success',
         })
       ).present();

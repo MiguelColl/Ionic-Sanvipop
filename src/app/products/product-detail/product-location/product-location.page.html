@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar></ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if(coords) {
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button color="secondary" (click)="navigateTo()">
+        <ion-icon name="navigate-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+    <bm-map [coords]="coords">
+      <bm-marker [coords]="coords" color="blue"></bm-marker>
+    </bm-map>
+  }
+</ion-content>

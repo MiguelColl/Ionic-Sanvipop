@@ -2,39 +2,71 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { Observable, catchError, from, map, of, switchMap } from 'rxjs';
-import { UserLogin, UserRegister } from '../interfaces/auth';
+import { ExternalLogin, UserLogin, UserRegister } from '../interfaces/auth';
 import { User } from 'src/app/profile/interfaces/user';
 import { TokenResponse } from '../interfaces/responses';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   #logged = signal(false);
   #userUrl = 'auth';
-  #http = inject(HttpClient)
+  #http = inject(HttpClient);
 
   get logged() {
     return this.#logged.asReadonly();
   }
 
   login(
-    user: UserLogin,
+    user: UserLogin
     //firebaseToken?: string // For push notifications
   ): Observable<void> {
-    return this.#http
-      .post<TokenResponse>(`${this.#userUrl}/login`, user)
-      .pipe(
-        // SwitchMap allows to return a value inside an Observable or a Promise (this case -> async)
-        switchMap(async (r) => {
-          try {
-            await Preferences.set({ key: 'fs-token', value: r.accessToken });
-            this.#logged.set(true);
-          } catch (e) {
-            throw new Error('Can\'t save authentication token in storage!');
-          }
-        })
-      );
+    return this.#http.post<TokenResponse>(`${this.#userUrl}/login`, user).pipe(
+      // SwitchMap allows to return a value inside an Observable or a Promise (this case -> async)
+      switchMap(async (r) => {
+        try {
+          await Preferences.set({ key: 'fs-token', value: r.accessToken });
+          this.#logged.set(true);
+        } catch (e) {
+          throw new Error("Can't save authentication token in storage!");
+        }
+      })
+    );
+  }
+
+  googleLogin(
+    data: ExternalLogin
+    //firebaseToken?: string // For push notifications
+  ): Observable<void> {
+    return this.#http.post<TokenResponse>(`${this.#userUrl}/google`, data).pipe(
+      // SwitchMap allows to return a value inside an Observable or a Promise (this case -> async)
+      switchMap(async (r) => {
+        try {
+          await Preferences.set({ key: 'fs-token', value: r.accessToken });
+          this.#logged.set(true);
+        } catch (e) {
+          throw new Error("Can't save authentication token in storage!");
+        }
+      })
+    );
+  }
+
+  facebookLogin(
+    data: ExternalLogin
+    //firebaseToken?: string // For push notifications
+  ): Observable<void> {
+    return this.#http.post<TokenResponse>(`${this.#userUrl}/facebook`, data).pipe(
+      // SwitchMap allows to return a value inside an Observable or a Promise (this case -> async)
+      switchMap(async (r) => {
+        try {
+          await Preferences.set({ key: 'fs-token', value: r.accessToken });
+          this.#logged.set(true);
+        } catch (e) {
+          throw new Error("Can't save authentication token in storage!");
+        }
+      })
+    );
   }
 
   register(user: UserRegister): Observable<void> {
@@ -47,13 +79,15 @@ export class AuthService {
   }
 
   isLogged(): Observable<boolean> {
-    if (this.#logged()) { // User is logged
+    if (this.#logged()) {
+      // User is logged
       return of(true);
     }
     // from transforms a Promise into an Observable
     return from(Preferences.get({ key: 'fs-token' })).pipe(
       switchMap((token) => {
-        if (!token.value) { // No token
+        if (!token.value) {
+          // No token
           return of(false);
         }
 
@@ -71,8 +105,6 @@ export class AuthService {
 
   // TODO: CAMBIAR A PROFILE SERVICE
   getProfile(): Observable<User> {
-    return this.#http
-      .get<User>('users/me')
-      .pipe(map((user) => user));
+    return this.#http.get<User>('users/me').pipe(map((user) => user));
   }
 }
