@@ -40,6 +40,11 @@ import {
   navigateOutline,
   logoGoogle,
   logoFacebook,
+  eyeOutline,
+  pinOutline,
+  createOutline,
+  heart,
+  heartOutline,
 } from 'ionicons/icons';
 import { AuthService } from './auth/services/auth.service';
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -105,6 +110,11 @@ export class AppComponent {
       navigateOutline,
       logoGoogle,
       logoFacebook,
+      eyeOutline,
+      pinOutline,
+      createOutline,
+      heart,
+      heartOutline,
     });
 
     effect(() => {

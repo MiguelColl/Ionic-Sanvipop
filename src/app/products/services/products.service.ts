@@ -7,6 +7,7 @@ import {
   SingleProductResponse,
 } from '../interfaces/responses';
 import { PhotoInsert } from '../interfaces/photo';
+import { ProductsURL } from '../interfaces/urls';
 
 @Injectable({
   providedIn: 'root',
@@ -15,9 +16,9 @@ export class ProductsService {
   #productsUrl = 'products';
   #http = inject(HttpClient);
 
-  getProducts(): Observable<Product[]> {
+  getProducts(prodURL: ProductsURL = ProductsURL.ALL): Observable<Product[]> {
     return this.#http
-      .get<ProductsResponse>(this.#productsUrl)
+      .get<ProductsResponse>(this.#productsUrl + prodURL)
       .pipe(map((resp) => resp.products));
   }
 
@@ -25,30 +26,6 @@ export class ProductsService {
     return this.#http
       .get<SingleProductResponse>(`${this.#productsUrl}/${id}`)
       .pipe(map((resp) => resp.product));
-  }
-
-  getProductsSelling(idUser: number): Observable<Product[]> {
-    return this.#http
-      .get<ProductsResponse>(`${this.#productsUrl}/user/${idUser}`)
-      .pipe(map((resp) => resp.products));
-  }
-
-  getProductsSold(idUser: number): Observable<Product[]> {
-    return this.#http
-      .get<ProductsResponse>(`${this.#productsUrl}/user/${idUser}/sold`)
-      .pipe(map((resp) => resp.products));
-  }
-
-  getProductsBought(idUser: number): Observable<Product[]> {
-    return this.#http
-      .get<ProductsResponse>(`${this.#productsUrl}/user/${idUser}/bought`)
-      .pipe(map((resp) => resp.products));
-  }
-
-  getProductsFavorites(): Observable<Product[]> {
-    return this.#http
-      .get<ProductsResponse>(`${this.#productsUrl}/bookmarks`)
-      .pipe(map((resp) => resp.products));
   }
 
   addProduct(product: ProductInsert): Observable<Product> {

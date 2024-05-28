@@ -105,6 +105,6 @@ export class AuthService {
 
   // TODO: CAMBIAR A PROFILE SERVICE
   getProfile(): Observable<User> {
-    return this.#http.get<User>('users/me').pipe(map((user) => user));
+    return this.#http.get<{ user: User }>('users/me').pipe(map((r) => r.user));
   }
 }

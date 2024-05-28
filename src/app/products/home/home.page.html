@@ -3,7 +3,32 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Lista de productos</ion-title>
+    <ion-title>{{ title() }}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      debounce="500"
+      [(ngModel)]="search"
+      placeholder="Buscar"
+    >
+    </ion-searchbar>
+    <div id="chips">
+      <ion-chip color="primary" (click)="changeProducts()">
+        <ion-label>Todos</ion-label>
+      </ion-chip>
+      <ion-chip color="primary" (click)="changeProducts('selling')">
+        <ion-label>A la venta</ion-label>
+      </ion-chip>
+      <ion-chip color="primary" (click)="changeProducts('favorites')">
+        <ion-label>Favoritos</ion-label>
+      </ion-chip>
+      <ion-chip color="primary" (click)="changeProducts('bought')">
+        <ion-label>Comprados</ion-label>
+      </ion-chip>
+      <ion-chip color="primary" (click)="changeProducts('sold')">
+        <ion-label>Vendidos</ion-label>
+      </ion-chip>
+    </div>
   </ion-toolbar>
 </ion-header>
 
@@ -17,19 +42,14 @@
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  <ion-list style="padding-bottom: 50px">
-    @for (prod of products; track prod.id) {
-      <ion-item>
-        <ion-thumbnail slot="start">
-          <img [src]="prod.mainPhoto">
-        </ion-thumbnail>
-        <ion-label text-wrap>
-          <h4>{{prod.description}}</h4>
-          <p>{{prod.price | currency:'EUR':'symbol'}}</p>
-        </ion-label>
-        <ion-button slot="end" fill="clear" color="dark" (click)="showOptions(prod)">
-          <ion-icon slot="icon-only" name="menu"></ion-icon>
-        </ion-button>
+  <ion-list>
+    @for (prod of filteredProducts(); track prod.id) {
+      <product-item [product]="prod" (deleted)="deleteProduct(prod)" (favChanged)="favoriteChanged(prod)"></product-item>
+    }
+
+    @if (filteredProducts().length === 0) {
+      <ion-item lines="none" id="noProducts">
+        <ion-label>No hay productos que mostrar</ion-label>
       </ion-item>
     }
   </ion-list>

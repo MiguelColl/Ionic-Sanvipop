@@ -1,0 +1,62 @@
+<ion-card>
+  <ion-img alt="Producto" [src]="product.mainPhoto" routerDirection="forward" [routerLink]="['/products', product.id]"></ion-img>
+  <ion-card-header>
+    <ion-card-title routerDirection="forward" [routerLink]="['/products', product.id]">{{ product.title }}</ion-card-title>
+    <ion-card-subtitle>{{ product.description }}</ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ion-item lines="full">
+      <ion-label class="category">{{ product.category.name }}</ion-label>
+      <p>{{ product.price | currency : "EUR" : "symbol" }}</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-avatar slot="start">
+        <ion-img alt="Avatar propietario" [src]="product.owner.photo" [routerLink]="['/profile', product.owner.id]"></ion-img>
+      </ion-avatar>
+      <ion-label>
+        <h3 [routerLink]="['/profile', product.owner.id]">{{ product.owner.name }}</h3>
+        <p>{{ product.datePublished | date : "dd/mm/yyyy, HH:MM" }}</p>
+        
+      </ion-label>
+      <ion-item-group>
+        <p>
+          <small id="spacing">{{ product.numVisits }}</small>
+          <ion-icon name="eye-outline"></ion-icon>
+        </p>
+        <p>
+          <small>{{ product.distance.toFixed(2) }} km</small>
+          <ion-icon name="pin-outline"></ion-icon>
+        </p>
+      </ion-item-group>
+    </ion-item>
+  </ion-card-content>
+
+  <ion-grid>
+    <ion-row>
+      @if (product.mine && product.status < 3) {
+        <ion-col>
+          <ion-button fill="clear" (click)="delete()">
+            <ion-icon name="trash" color="danger"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button fill="clear" [routerLink]="['/products', product.id, 'edit']">
+            <ion-icon name="create-outline" color="success"></ion-icon>
+          </ion-button>
+        </ion-col>
+      }
+      <ion-col>
+        <ion-button fill="clear" (click)="changeFavorite()">
+          @if(product.bookmarked) {
+            <ion-icon name="heart" color="danger" ></ion-icon>
+          } @else {
+            <ion-icon name="heart-outline" color="danger"></ion-icon>
+          }
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
+</ion-card>

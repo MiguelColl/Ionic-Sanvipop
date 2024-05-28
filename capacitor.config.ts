@@ -13,7 +13,7 @@ const config: CapacitorConfig = {
   plugins: {
     GoogleAuth: {
       scopes: ['profile', 'email'],
-      androidClientId: 'colladodev.ionic.sanvipop',
+      androidClientId: '1066792929235-fm57ku5qv4ncifl4fkvtdsb1j6jvmmsq.apps.googleusercontent.com',
       forceCodeForRefreshToken: true,
     },
   },

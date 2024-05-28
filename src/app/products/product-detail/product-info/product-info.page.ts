@@ -18,6 +18,7 @@ import {
 import { ProductsService } from '../../services/products.service';
 import { ProductDetailPage } from '../product-detail.page';
 import { CurrencyPipe } from '@angular/common';
+import { ProductItemPage } from '../../product-item/product-item.page';
 
 @Component({
   selector: 'product-info',
@@ -38,6 +39,7 @@ import { CurrencyPipe } from '@angular/common';
     IonLabel,
     IonItem,
     IonAvatar,
+    ProductItemPage,
   ],
 })
 export class ProductInfoPage {
@@ -47,25 +49,7 @@ export class ProductInfoPage {
   #productsService = inject(ProductsService);
   #nav = inject(NavController);
 
-  async delete() {
-    const alert = await this.#alertCtrl.create({
-      header: 'Delete product',
-      message: 'Are you sure you want to delete this product?',
-      buttons: [
-        {
-          text: 'Ok',
-          handler: () => {
-            this.#productsService
-              .deleteProduct(this.product()!.id!)
-              .subscribe(() => this.#nav.navigateBack(['/products']));
-          },
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-      ],
-    });
-    alert.present();
+  delete() {
+    this.#nav.navigateBack(['/products']);
   }
 }
