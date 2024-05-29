@@ -1,3 +1,46 @@
-<p>
-  change-image works!
-</p>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Modificar el avatar</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label position="inset">Avatar</ion-label>
+      <ion-button color="secondary" (click)="takePhoto()">
+        <ion-icon name="camera" slot="start"></ion-icon>
+        Camara
+      </ion-button>
+      <ion-button color="tertiary" (click)="pickFromGallery()">
+        <ion-icon name="images" slot="start"></ion-icon>
+        Galeria
+      </ion-button>
+    </ion-item>
+
+    @if (avatar.photo) {
+      <ion-img [src]="imageBase64"></ion-img>
+    }
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" color="primary" expand="block" [disabled]="imageBase64 === avatar.photo" (click)="changeImage()">
+            <ion-icon name="document-text" slot="start"></ion-icon>
+            Cambiar avatar
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button color="danger" expand="block" fill="outline" (click)="close()">
+            <ion-icon name="arrow-undo-circle" slot="start"></ion-icon>
+            Cancelar
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
+</ion-content>

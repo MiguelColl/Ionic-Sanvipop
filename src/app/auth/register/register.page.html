@@ -8,20 +8,22 @@
   <form (ngSubmit)="register()" [formGroup]="registerForm">
     <ion-list>
       <ion-item>
-        <ion-input label="Nombre" labelPlacement="floating" required formControlName="name"></ion-input>
-        @if (registerForm.controls.name.dirty && registerForm.controls.name.valid) {
-          <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
-        }
+        <ion-input label="Nombre" labelPlacement="floating" required formControlName="name">
+          @if (registerForm.controls.name.dirty && registerForm.controls.name.valid) {
+            <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
+          }
+        </ion-input>
       </ion-item>
       @if (registerForm.controls.name.touched && registerForm.controls.name.errors?.['required']) {
         <ion-label color="danger" class="errorLabel">El nombre no puede estar vacío</ion-label>
       }
       
       <ion-item>
-        <ion-input type="email" label="Email" labelPlacement="floating" required email formControlName="email"></ion-input>
-        @if (registerForm.controls.email.dirty && registerForm.controls.email.valid) {
-          <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
-        }
+        <ion-input type="email" label="Email" labelPlacement="floating" required email formControlName="email">
+          @if (registerForm.controls.email.dirty && registerForm.controls.email.valid) {
+            <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
+          }
+        </ion-input>
       </ion-item>
       @if (registerForm.controls.email.touched && registerForm.controls.email.errors?.['required']) {
         <ion-label color="danger" class="errorLabel">El email no puede estar vacío</ion-label>

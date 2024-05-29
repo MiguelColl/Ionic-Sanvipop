@@ -24,5 +24,9 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./profile/profile.routes').then((m) => m.profileRoutes),
     canActivate: [loginActivateGuard],
+  },  {
+    path: 'rating-item',
+    loadComponent: () => import('./ratings/rating-item/rating-item.page').then( m => m.RatingItemPage)
   },
+
 ];

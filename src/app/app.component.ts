@@ -49,6 +49,9 @@ import {
   image,
   lockOpen,
   create,
+  starHalfOutline,
+  star,
+  starOutline,
 } from 'ionicons/icons';
 import { AuthService } from './auth/services/auth.service';
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -126,6 +129,9 @@ export class AppComponent {
       person,
       image,
       lockOpen,
+      starHalfOutline,
+      star,
+      starOutline,
     });
 
     effect(() => {

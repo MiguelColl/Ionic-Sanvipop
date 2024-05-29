@@ -13,18 +13,10 @@
 
     <ion-item>
       <ion-avatar slot="start">
-        @if (product.mine) {
-          <ion-img alt="Avatar propietario" [src]="product.owner.photo" [routerLink]="['/profile']"></ion-img>
-        } @else {
-          <ion-img alt="Avatar propietario" [src]="product.owner.photo" [routerLink]="['/profile', product.owner.id]"></ion-img>
-        }
+        <ion-img alt="Avatar propietario" [src]="product.owner.photo" [routerLink]="product.mine ? ['/profile'] : ['/profile', product.owner.id]"></ion-img>
       </ion-avatar>
       <ion-label>
-        @if (product.mine) {
-          <h3 [routerLink]="['/profile']">{{ product.owner.name }}</h3>
-        } @else {
-          <h3 [routerLink]="['/profile', product.owner.id]">{{ product.owner.name }}</h3>
-        }
+        <h3 [routerLink]="product.mine ? ['/profile'] : ['/profile', product.owner.id]">{{ product.owner.name }}</h3>
         <p>{{ product.datePublished | date : "dd/mm/yyyy, HH:MM" }}</p>
         
       </ion-label>
@@ -57,11 +49,7 @@
       }
       <ion-col>
         <ion-button fill="clear" (click)="changeFavorite()">
-          @if(product.bookmarked) {
-            <ion-icon name="heart" color="danger" ></ion-icon>
-          } @else {
-            <ion-icon name="heart-outline" color="danger"></ion-icon>
-          }
+          <ion-icon [name]="product.bookmarked ? 'heart' : 'heart-outline'" color="danger" ></ion-icon>
         </ion-button>
       </ion-col>
     </ion-row>

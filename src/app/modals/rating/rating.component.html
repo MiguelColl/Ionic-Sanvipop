@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Valorar a {{ name }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="addRating()" [formGroup]="ratingForm">
+    <ion-list>
+      <ion-item>
+        <ion-select required label="Valoración" label-placement="floating" interface="popover" formControlName="rate">
+          @for (number of [1, 2, 3, 4, 5]; track $index) {
+            <ion-select-option [value]="number">{{ number }}</ion-select-option>
+          }
+        </ion-select>
+        @if (ratingForm.controls.rate.dirty && ratingForm.controls.rate.valid) {
+          <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
+        }
+      </ion-item>
+      @if (ratingForm.controls.rate.touched && ratingForm.controls.rate.errors?.['required']) {
+        <ion-label color="danger" class="errorLabel">La valoración no puede estar vacía</ion-label>
+      }
+      
+      <ion-item>
+        <ion-textarea label="Comentario" labelPlacement="floating" required formControlName="comment">
+          @if (ratingForm.controls.comment.dirty && ratingForm.controls.comment.valid) {
+            <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
+          }
+        </ion-textarea>
+      </ion-item>
+      @if (ratingForm.controls.comment.touched && ratingForm.controls.comment.errors?.['required']) {
+        <ion-label color="danger" class="errorLabel">El comentario no puede estar vacío</ion-label>
+      }
+
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-button type="submit" color="primary" expand="block" [disabled]="ratingForm.invalid || !ratingForm.dirty">
+              <ion-icon name="star-half-outline" slot="start"></ion-icon>
+              Enviar valoración
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button color="danger" expand="block" fill="outline" (click)="close()">
+              <ion-icon name="arrow-undo-circle" slot="start"></ion-icon>
+              Cancelar
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-list>
+  </form>
+</ion-content>

@@ -12,5 +12,69 @@
         <ion-card-subtitle>{{ product()?.soldTo?.email }}</ion-card-subtitle>
       </ion-card-header>   
     </ion-card>
+
+    @if (product()!.owner.id === user.id && (!product()!.rating || !product()!.rating!.sellerRating)) {
+      <ion-button color="success" (click)="rate()" expand="block">
+        <ion-icon name="star-half-outline"></ion-icon>
+        <ion-label>Calificar comprador</ion-label>
+      </ion-button>
+    }
+
+    @if (product()!.rating && product()!.rating.sellerRating && product()!.rating.sellerRating > 0) {
+      <ion-title>Valoración del vendedor</ion-title>
+      <ion-card>
+        <ion-card-content style="padding-bottom: 0;">
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img alt="Avatar del vendedor" [src]="product()!.owner.photo" [routerLink]="product()!.mine ? ['/profile'] : ['/profile', product()!.owner.id]"></ion-img>
+            </ion-avatar>
+            <ion-label [routerLink]="product()!.mine ? ['/profile'] : ['/profile', product()!.owner.id]">{{ product()!.owner.name }}</ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              @for (_ of [].constructor(product()!.rating.sellerRating); track $index) {
+                <ion-icon name="star"></ion-icon>
+              }
+              @for (_ of [].constructor(5 - product()!.rating.sellerRating); track $index) {
+                <ion-icon name="star-outline"></ion-icon>
+              }
+              <p>{{ product()!.rating!.sellerComment }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    }
+
+    @if (product()!.soldTo!.id === user.id && (!product()!.rating || !product()!.rating!.buyerRating)) {
+      <ion-button color="success" (click)="rate()" expand="block">
+        <ion-icon name="star-half-outline"></ion-icon>
+        <ion-label>Calificar vendedor</ion-label>
+      </ion-button>
+    }
+
+    @if (product()!.rating && product()!.rating.buyerRating && product()!.rating.buyerRating > 0) {
+      <ion-title>Valoración del comprador</ion-title>
+      <ion-card>
+        <ion-card-content style="padding-bottom: 0;">
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img alt="Avatar del comprador" [src]="userAvatar()" [routerLink]="product()!.mine ? ['/profile'] : ['/profile', product()!.soldTo!.id]"></ion-img>
+            </ion-avatar>
+            <ion-label [routerLink]="product()!.mine ? ['/profile'] : ['/profile', product()!.soldTo!.id]">{{ product()!.soldTo!.name }}</ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              @for (_ of [].constructor(product()!.rating.buyerRating); track $index) {
+                <ion-icon name="star"></ion-icon>
+              }
+              @for (_ of [].constructor(5 - product()!.rating.buyerRating); track $index) {
+                <ion-icon name="star-outline"></ion-icon>
+              }
+              <p>{{ product()!.rating!.buyerComment }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    }
   }
 </ion-content>

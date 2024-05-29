@@ -4,7 +4,7 @@
 
 <ion-content [fullscreen]="true">
   @if (product()) {
-    @if (product()!.status < 3) {
+    @if (!product()!.mine && product()!.status < 3) {
       <ion-button color="success" (click)="buyProduct()" expand="block">
         <ion-icon name="cash-outline"></ion-icon>
         <ion-label>Comprar</ion-label>

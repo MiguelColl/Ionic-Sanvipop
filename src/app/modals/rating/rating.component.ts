@@ -21,14 +21,17 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonSelectOption,
+  IonTextarea,
+  IonSelect,
 } from '@ionic/angular/standalone';
-import { UserProfileEdit } from 'src/app/profile/interfaces/user';
-import { ProfilesService } from 'src/app/profile/services/profiles.service';
+import { RatingInsert } from 'src/app/ratings/interfaces/rating';
+import { RatingsService } from 'src/app/ratings/ratings.service';
 
 @Component({
-  selector: 'change-data',
-  templateUrl: './change-data.component.html',
-  styleUrls: ['./change-data.component.scss'],
+  selector: 'rating',
+  templateUrl: './rating.component.html',
+  styleUrls: ['./rating.component.scss'],
   standalone: true,
   imports: [
     IonHeader,
@@ -46,38 +49,41 @@ import { ProfilesService } from 'src/app/profile/services/profiles.service';
     IonRow,
     IonCol,
     ReactiveFormsModule,
+    IonSelectOption,
+    IonTextarea,
+    IonSelect,
   ],
 })
-export class ChangeDataComponent {
-  @Input() data!: UserProfileEdit;
+export class RatingComponent {
+  @Input() id!: number;
+  @Input() name!: string;
 
   #modalCtrl = inject(ModalController);
   #toastCtrl = inject(ToastController);
+  #ratingsService = inject(RatingsService);
   #fb = inject(NonNullableFormBuilder);
-  #profilesService = inject(ProfilesService);
+  numbers = [1, 2, 3, 4, 5];
 
-  profileForm = this.#fb.group({
-    name: ['', [Validators.required]],
-    email: ['', [Validators.required, Validators.email]],
+  ratingForm = this.#fb.group({
+    rate: ['', [Validators.required]],
+    comment: ['', [Validators.required]],
   });
 
-  ionViewWillEnter() {
-    this.profileForm.controls.name.setValue(this.data.name);
-    this.profileForm.controls.email.setValue(this.data.email);
-    this.profileForm.markAsPristine();
-  }
+  ionViewWillEnter() {}
 
-  changeProfile() {
-    const profile: UserProfileEdit = {
-      ...this.profileForm.getRawValue(),
+  addRating() {
+    const ratingInsert: RatingInsert = {
+      rating: +this.ratingForm.controls.rate.value,
+      comment: this.ratingForm.controls.comment.value,
+      product: this.id,
     };
 
-    this.#profilesService.updateProfile(profile).subscribe({
-      next: () => this.#modalCtrl.dismiss({ ok: true, profile: profile }),
-      error: async () => 
+    this.#ratingsService.postRating(ratingInsert).subscribe({
+      next: () => this.#modalCtrl.dismiss({ rating: ratingInsert }),
+      error: async () =>
         (
           await this.#toastCtrl.create({
-            message: 'Ese correo ya existe',
+            message: 'Error insertando rating',
             duration: 3000,
             position: 'bottom',
             color: 'danger',

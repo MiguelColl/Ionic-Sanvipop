@@ -17,7 +17,15 @@ export const productsRoutes: Routes = [
       import('./product-detail/product-detail.page').then(
         (m) => m.ProductDetailPage
       ),
-    loadChildren: () => // Child (inner) routes
-      import('./product-detail/product-detail.routes').then((m) => m.productDetailRoutes),
+    loadChildren: () =>
+      // Child (inner) routes
+      import('./product-detail/product-detail.routes').then(
+        (m) => m.productDetailRoutes
+      ),
+  },
+  {
+    path: ':id/edit',
+    loadComponent: () =>
+      import('./product-form/product-form.page').then((m) => m.ProductFormPage),
   },
 ];

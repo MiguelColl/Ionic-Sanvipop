@@ -1,5 +1,6 @@
 import {
   Component,
+  OnInit,
   WritableSignal,
   computed,
   inject,
@@ -65,11 +66,11 @@ import { ProductsURL } from '../interfaces/urls';
     IonChip,
   ],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   #productsService = inject(ProductsService);
   products: WritableSignal<Product[]> = signal([]);
   search = signal('');
-  title = signal('Productos en venta');
+  title = signal('');
   #favoritePage = false;
 
   filteredProducts = computed(() =>
@@ -80,10 +81,12 @@ export class HomePage {
     )
   );
 
-  ionViewWillEnter() {
+  ngOnInit() {
     this.#productsService
       .getProducts()
       .subscribe((prods) => this.products.set(prods));
+
+      this.title.set('Productos en venta');
   }
 
   reloadProducts(refresher: IonRefresher) {

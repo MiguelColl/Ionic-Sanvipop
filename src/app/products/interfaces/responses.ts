@@ -1,6 +1,6 @@
 import { Category } from "./category";
 import { Product } from "./product";
-import { Rating } from "./rating";
+import { Rating } from "../../ratings/interfaces/rating";
 
 export interface ProductsResponse {
     products: Product[];

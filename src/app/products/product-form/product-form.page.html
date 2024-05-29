@@ -3,12 +3,12 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Añadir producto</ion-title>
+    <ion-title>{{ id ? 'Editar producto' : 'Añadir producto'}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <form [formGroup]="productForm" (ngSubmit)="addProduct()">
+  <form [formGroup]="productForm" (ngSubmit)="id ? editProduct() : addProduct()">
     <ion-list>
       <ion-item>
         <ion-input required label="Nombre del producto" labelPlacement="floating" formControlName="title"></ion-input>
@@ -62,27 +62,29 @@
         <ion-label color="danger" class="errorLabel">El precio debe ser mayor que 0</ion-label>
       }
 
-      <ion-item>
-        <ion-label position="inset">Foto</ion-label>
-        <ion-button color="secondary" (click)="takePhoto()">
-          <ion-icon name="camera" slot="start"></ion-icon>
-          Camara
-        </ion-button>
-        <ion-button color="tertiary" (click)="pickFromGallery()">
-          <ion-icon name="images" slot="start"></ion-icon>
-          Galeria
-        </ion-button>
-      </ion-item>
+      @if (!id) {
+        <ion-item>
+          <ion-label position="inset">Foto</ion-label>
+          <ion-button color="secondary" (click)="takePhoto()">
+            <ion-icon name="camera" slot="start"></ion-icon>
+            Camara
+          </ion-button>
+          <ion-button color="tertiary" (click)="pickFromGallery()">
+            <ion-icon name="images" slot="start"></ion-icon>
+            Galeria
+          </ion-button>
+        </ion-item>
+      }
     </ion-list>
-    @if (imageBase64) {
+    @if (imageBase64 && !id) {
       <ion-img [src]="imageBase64"></ion-img>
     }
     <ion-grid>
       <ion-row>
         <ion-col>
-          <ion-button type="submit" color="primary" expand="block" [disabled]="productForm.invalid || !imageBase64">
-            <ion-icon name="add" slot="start"></ion-icon>
-            Añadir producto
+          <ion-button type="submit" color="primary" expand="block" [disabled]="productForm.invalid || !imageBase64 || productForm.pristine ">
+            <ion-icon [name]="id ? 'create' : 'add'" slot="start"></ion-icon>
+            {{ id ? 'Editar producto' : 'Añadir producto'}}
           </ion-button>
         </ion-col>
         <ion-col>

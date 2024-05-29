@@ -23,18 +23,18 @@ import {
   ToastController,
 } from '@ionic/angular/standalone';
 import { ProfilesService } from '../services/profiles.service';
-import {
-  User,
-  UserProfileEdit,
-  UserPasswordEdit,
-  UserPhotoEdit,
-} from '../interfaces/user';
+import { User, UserProfileEdit, UserPhotoEdit } from '../interfaces/user';
 import { BmMapDirective } from 'src/app/bingmaps/bm-map.directive';
 import { BmMarkerDirective } from 'src/app/bingmaps/bm-marker.directive';
 import { Coordinates } from 'src/app/bingmaps/coordinates';
 import { ChangeDataComponent } from 'src/app/modals/change-data/change-data.component';
 import { ChangePasswordComponent } from 'src/app/modals/change-password/change-password.component';
 import { ChangeImageComponent } from 'src/app/modals/change-image/change-image.component';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { AppComponent } from 'src/app/app.component';
+import { RatingsService } from 'src/app/ratings/ratings.service';
+import { Rating } from 'src/app/ratings/interfaces/rating';
+import { RatingItemPage } from 'src/app/ratings/rating-item/rating-item.page';
 
 @Component({
   selector: 'profile-page',
@@ -63,14 +63,18 @@ import { ChangeImageComponent } from 'src/app/modals/change-image/change-image.c
     IonRow,
     IonCol,
     IonIcon,
+    RatingItemPage,
   ],
 })
 export class ProfilePagePage {
   @Input() id?: number;
   user = signal<User | null>(null);
   coords = signal<Coordinates | null>(null);
+  ratings = signal<Rating[] | null>(null);
 
+  #appComponent = inject(AppComponent);
   #profilesService = inject(ProfilesService);
+  #ratingsService = inject(RatingsService);
   #modalCtrl = inject(ModalController);
   #toastCtrl = inject(ToastController);
 
@@ -80,11 +84,19 @@ export class ProfilePagePage {
         this.user.set(u);
         this.updateCoords(u.lat, u.lng);
       });
+
+      this.#ratingsService
+        .getRatings(this.id)
+        .subscribe((resp) => this.ratings.set(resp));
     } else {
       this.#profilesService.getMyProfile().subscribe((u) => {
         this.user.set(u);
         this.updateCoords(u.lat, u.lng);
       });
+
+      this.#ratingsService
+        .getMyRatings()
+        .subscribe((resp) => this.ratings.set(resp));
     }
   }
 
@@ -95,11 +107,11 @@ export class ProfilePagePage {
     });
   }
 
-  async changeData() {
+  async changeProfile() {
     const data: UserProfileEdit = {
       email: this.user()!.email,
       name: this.user()!.name,
-    }
+    };
 
     const modal = await this.#modalCtrl.create({
       component: ChangeDataComponent,
@@ -109,17 +121,16 @@ export class ProfilePagePage {
     const result = await modal.onDidDismiss();
     if (result.data && result.data.ok) {
       this.showToast('Los datos del usuario se han cambiado');
+      this.user()!.name = result.data.profile.name;
+      this.user()!.email = result.data.profile.email;
+      this.#appComponent.user!.name = result.data.profile.name;
+      this.#appComponent.user!.email = result.data.profile.email;
     }
   }
 
   async changePassword() {
-    const pass: UserPasswordEdit = {
-      password: this.user()!.password!,
-    }
-
     const modal = await this.#modalCtrl.create({
       component: ChangePasswordComponent,
-      componentProps: { password: pass },
     });
     await modal.present();
     const result = await modal.onDidDismiss();
@@ -130,16 +141,18 @@ export class ProfilePagePage {
 
   async changeImage() {
     const photo: UserPhotoEdit = {
-      photo: this.user()!.photo
-    }
+      photo: this.user()!.photo,
+    };
 
     const modal = await this.#modalCtrl.create({
       component: ChangeImageComponent,
-      componentProps: { photo: photo },
+      componentProps: { avatar: photo },
     });
     await modal.present();
     const result = await modal.onDidDismiss();
     if (result.data && result.data.ok) {
+      this.user()!.photo = result.data.avatar;
+      this.#appComponent.user!.photo = result.data.avatar;
       this.showToast('El avatar se ha cambiado');
     }
   }

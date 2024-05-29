@@ -36,7 +36,7 @@ export class ProfilesService {
     return this.#http.put<void>(`${this.#profileUrl}/me/password`, password);
   }
 
-  updatePhoto(photo: UserPhotoEdit): Observable<void> {
-    return this.#http.put<void>(`${this.#profileUrl}/me/photo`, photo);
+  updatePhoto(photo: UserPhotoEdit): Observable<UserPhotoEdit> {
+    return this.#http.put<UserPhotoEdit>(`${this.#profileUrl}/me/photo`, photo);
   }
 }
