@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Rating, RatingInsert } from './interfaces/rating';
+import { Rating, RatingInsert, RatingResponse } from './interfaces/rating';
 import { Observable, map } from 'rxjs';
 
 @Injectable({
@@ -16,13 +16,13 @@ export class RatingsService {
 
   getMyRatings(): Observable<Rating[]> {
     return this.#http
-      .get<Rating[]>(`${this.#ratingUrl}/user/me`)
-      .pipe(map((resp) => resp));
+      .get<RatingResponse>(`${this.#ratingUrl}/user/me`)
+      .pipe(map((resp) => resp.ratings));
   }
 
   getRatings(id: number): Observable<Rating[]> {
     return this.#http
-      .get<Rating[]>(`${this.#ratingUrl}/user/${id}`)
-      .pipe(map((resp) => resp));
+      .get<RatingResponse>(`${this.#ratingUrl}/user/${id}`)
+      .pipe(map((resp) => resp.ratings));
   }
 }

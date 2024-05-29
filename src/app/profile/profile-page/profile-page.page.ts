@@ -70,7 +70,7 @@ export class ProfilePagePage {
   @Input() id?: number;
   user = signal<User | null>(null);
   coords = signal<Coordinates | null>(null);
-  ratings = signal<Rating[] | null>(null);
+  ratings: Rating[] | null = null;
 
   #appComponent = inject(AppComponent);
   #profilesService = inject(ProfilesService);
@@ -87,7 +87,7 @@ export class ProfilePagePage {
 
       this.#ratingsService
         .getRatings(this.id)
-        .subscribe((resp) => this.ratings.set(resp));
+        .subscribe((resp) => (this.ratings = resp));
     } else {
       this.#profilesService.getMyProfile().subscribe((u) => {
         this.user.set(u);
@@ -96,7 +96,7 @@ export class ProfilePagePage {
 
       this.#ratingsService
         .getMyRatings()
-        .subscribe((resp) => this.ratings.set(resp));
+        .subscribe((resp) => (this.ratings = resp));
     }
   }
 

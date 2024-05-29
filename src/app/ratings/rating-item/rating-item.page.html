@@ -2,18 +2,18 @@
   <ion-card-content style="padding-bottom: 0;">
     <ion-item>
       <ion-avatar slot="start">
-        <ion-img alt="Avatar del usuario valorador" [src]="rating.user.photo" [routerLink]="['/profile', rating.user.id]"></ion-img>
+        <ion-img alt="Avatar del usuario valorador" [src]=" 'http://api.fullstackpro.es/sanvipop/' + rating.user.photo" [routerLink]="['/profile', rating.user.id]"></ion-img>
       </ion-avatar>
       <ion-label [routerLink]="['/profile', rating.user.id]">{{ rating.user.name }}</ion-label>
     </ion-item>
     <ion-item lines="none">
       <ion-label>
-        <!-- @for (_ of [].constructor(rating.rating); track $index) {
+        @for (_ of [].constructor(rating.rating); track $index) {
           <ion-icon name="star"></ion-icon>
         }
         @for (_ of [].constructor(5 - rating.rating); track $index) {
           <ion-icon name="star-outline"></ion-icon>
-        } -->
+        }
         <p>{{ rating.comment }}</p>
       </ion-label>
     </ion-item>
