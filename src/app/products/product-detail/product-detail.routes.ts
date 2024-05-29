@@ -14,6 +14,11 @@ export const productDetailRoutes: Routes = [
       ),
   },
   {
+    path: 'sale',
+    loadComponent: () =>
+      import('./product-sale/product-sale.page').then((m) => m.ProductSalePage),
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'info', // Por defecto

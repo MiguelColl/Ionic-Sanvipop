@@ -1,0 +1,16 @@
+<ion-header id="header">
+  <ion-toolbar></ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (product()) {
+    <ion-title>Detalles del comprador</ion-title>
+    <ion-card>
+      <ion-img alt="Avatar del comprador" [src]="userAvatar()" [routerLink]="['/profile', product()?.soldTo?.id]"></ion-img>
+      <ion-card-header style="text-align: center;">
+        <ion-card-title [routerLink]="['/profile', product()?.soldTo?.id]">{{ product()?.soldTo?.name }}</ion-card-title>
+        <ion-card-subtitle>{{ product()?.soldTo?.email }}</ion-card-subtitle>
+      </ion-card-header>   
+    </ion-card>
+  }
+</ion-content>

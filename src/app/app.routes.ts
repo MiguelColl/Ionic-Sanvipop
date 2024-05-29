@@ -19,4 +19,10 @@ export const routes: Routes = [
       import('./products/products.routes').then((m) => m.productsRoutes),
     canActivate: [loginActivateGuard],
   },
+  {
+    path: 'profile',
+    loadChildren: () =>
+      import('./profile/profile.routes').then((m) => m.profileRoutes),
+    canActivate: [loginActivateGuard],
+  },
 ];

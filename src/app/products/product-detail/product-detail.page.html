@@ -19,5 +19,11 @@
       <ion-icon name="map-sharp"></ion-icon>
       <ion-label>Ubicación</ion-label>
     </ion-tab-button>
+    @if (product()?.soldTo !== null) {
+      <ion-tab-button tab="sale">
+        <ion-icon name="cash-outline"></ion-icon>
+        <ion-label>Venta</ion-label>
+      </ion-tab-button>
+    }
   </ion-tab-bar>
 </ion-tabs>

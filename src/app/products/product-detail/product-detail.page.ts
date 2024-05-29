@@ -38,8 +38,6 @@ export class ProductDetailPage {
 
   #productsService = inject(ProductsService);
 
-  constructor() {}
-
   ionViewWillEnter() {
     this.#productsService
       .getProduct(this.id)

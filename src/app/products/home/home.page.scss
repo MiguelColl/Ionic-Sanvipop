@@ -4,10 +4,9 @@
 
 #chips {
   padding: 0.15rem 0.4rem;
-  display: flex;
-  overflow-x: auto;
-
-  ion-chip {
-    flex-shrink: 0;
+  overflow: auto;
+  white-space: nowrap;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }

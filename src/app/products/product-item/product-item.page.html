@@ -13,10 +13,18 @@
 
     <ion-item>
       <ion-avatar slot="start">
-        <ion-img alt="Avatar propietario" [src]="product.owner.photo" [routerLink]="['/profile', product.owner.id]"></ion-img>
+        @if (product.mine) {
+          <ion-img alt="Avatar propietario" [src]="product.owner.photo" [routerLink]="['/profile']"></ion-img>
+        } @else {
+          <ion-img alt="Avatar propietario" [src]="product.owner.photo" [routerLink]="['/profile', product.owner.id]"></ion-img>
+        }
       </ion-avatar>
       <ion-label>
-        <h3 [routerLink]="['/profile', product.owner.id]">{{ product.owner.name }}</h3>
+        @if (product.mine) {
+          <h3 [routerLink]="['/profile']">{{ product.owner.name }}</h3>
+        } @else {
+          <h3 [routerLink]="['/profile', product.owner.id]">{{ product.owner.name }}</h3>
+        }
         <p>{{ product.datePublished | date : "dd/mm/yyyy, HH:MM" }}</p>
         
       </ion-label>
@@ -43,7 +51,7 @@
         </ion-col>
         <ion-col>
           <ion-button fill="clear" [routerLink]="['/products', product.id, 'edit']">
-            <ion-icon name="create-outline" color="success"></ion-icon>
+            <ion-icon name="create" color="success"></ion-icon>
           </ion-button>
         </ion-col>
       }

@@ -15,7 +15,6 @@ import {
   IonImg,
   IonLabel,
 } from '@ionic/angular/standalone';
-import { ProductsService } from '../../services/products.service';
 import { ProductDetailPage } from '../product-detail.page';
 import { BmMapDirective } from 'src/app/bingmaps/bm-map.directive';
 import { BmMarkerDirective } from 'src/app/bingmaps/bm-marker.directive';
@@ -48,7 +47,7 @@ import { StartNavigation } from '@proteansoftware/capacitor-start-navigation';
 export class ProductLocationPage {
   product = inject(ProductDetailPage).product; // Obtenemos signal de la página padre
 
-  coords?: Coordinates
+  coords?: Coordinates;
 
   ionViewWillEnter() {
     this.coords = {

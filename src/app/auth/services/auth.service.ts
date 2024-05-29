@@ -3,7 +3,6 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { Observable, catchError, from, map, of, switchMap } from 'rxjs';
 import { ExternalLogin, UserLogin, UserRegister } from '../interfaces/auth';
-import { User } from 'src/app/profile/interfaces/user';
 import { TokenResponse } from '../interfaces/responses';
 
 @Injectable({
@@ -101,10 +100,5 @@ export class AuthService {
       }),
       catchError(() => of(false)) // No value in Preferences
     );
-  }
-
-  // TODO: CAMBIAR A PROFILE SERVICE
-  getProfile(): Observable<User> {
-    return this.#http.get<{ user: User }>('users/me').pipe(map((r) => r.user));
   }
 }

@@ -42,15 +42,20 @@ import {
   logoFacebook,
   eyeOutline,
   pinOutline,
-  createOutline,
   heart,
   heartOutline,
+  cashOutline,
+  person,
+  image,
+  lockOpen,
+  create,
 } from 'ionicons/icons';
 import { AuthService } from './auth/services/auth.service';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { User } from './profile/interfaces/user';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
+import { ProfilesService } from './profile/services/profiles.service';
 
 @Component({
   selector: 'app-root',
@@ -82,12 +87,14 @@ export class AppComponent {
   user: User | null = null;
 
   #authService = inject(AuthService);
+  #profilesService = inject(ProfilesService);
   #platform = inject(Platform);
   #nav = inject(NavController);
 
   public appPages = [
     { title: 'Home', url: '/products', icon: 'home' },
     { title: 'Añadir producto', url: '/products/add', icon: 'add' },
+    { title: 'Perfil', url: '/profile', icon: 'person' },
   ];
 
   constructor() {
@@ -112,14 +119,20 @@ export class AppComponent {
       logoFacebook,
       eyeOutline,
       pinOutline,
-      createOutline,
+      create,
       heart,
       heartOutline,
+      cashOutline,
+      person,
+      image,
+      lockOpen,
     });
 
     effect(() => {
       if (this.#authService.logged()) {
-        this.#authService.getProfile().subscribe((user) => (this.user = user));
+        this.#profilesService
+          .getMyProfile()
+          .subscribe((user) => (this.user = user));
       } else {
         this.user = null;
       }

@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import {
   AlertController,
+  ToastController,
   NavController,
   IonHeader,
   IonToolbar,
@@ -46,10 +47,48 @@ export class ProductInfoPage {
   product = inject(ProductDetailPage).product; // Obtenemos signal de la página padre
 
   #alertCtrl = inject(AlertController);
+  #toastCtrl = inject(ToastController);
   #productsService = inject(ProductsService);
   #nav = inject(NavController);
 
   delete() {
     this.#nav.navigateBack(['/products']);
+  }
+
+  async buyProduct() {
+    (
+      await this.#alertCtrl.create({
+        header: this.product()!.title,
+        message: '¿Quieres comprar este producto?',
+        buttons: [
+          {
+            text: 'Confirmar',
+            handler: () =>
+              this.#productsService.buyProduct(this.product()!.id).subscribe({
+                next: async () => {
+                  this.#productsService
+                    .getProduct(this.product()!.id)
+                    .subscribe((p) => this.product.set(p));
+
+                  (
+                    await this.#toastCtrl.create({
+                      message: '¡El producto ha sido comprado!',
+                      duration: 3000,
+                      position: 'top',
+                      positionAnchor: 'header',
+                      color: 'success',
+                    })
+                  ).present();
+                },
+                error: () => console.error('Error comprando producto'),
+              }),
+          },
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+          },
+        ],
+      })
+    ).present();
   }
 }

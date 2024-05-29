@@ -1,9 +1,16 @@
-<ion-header>
+<ion-header id="header">
   <ion-toolbar></ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   @if (product()) {
+    @if (product()!.status < 3) {
+      <ion-button color="success" (click)="buyProduct()" expand="block">
+        <ion-icon name="cash-outline"></ion-icon>
+        <ion-label>Comprar</ion-label>
+      </ion-button>
+    }
+
     <product-item [product]="product()!" (deleted)="delete()"></product-item>
   }
 </ion-content>
