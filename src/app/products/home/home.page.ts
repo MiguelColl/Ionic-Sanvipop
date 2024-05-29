@@ -92,6 +92,7 @@ export class HomePage implements OnInit {
   reloadProducts(refresher: IonRefresher) {
     this.#productsService.getProducts().subscribe((prods) => {
       this.products.set(prods);
+      this.title.set('Productos en venta');
       refresher.complete();
     });
   }
