@@ -1,0 +1,48 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ id ? 'Perfil de ' + user()?.name : 'Mi perfil' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (user()) {
+    <ion-card>
+      <ion-img alt="Avatar del comprador" [src]="user()?.photo"></ion-img>
+      <ion-card-header>
+        <ion-card-title>{{ user()?.name }}</ion-card-title>
+        <ion-card-subtitle>{{ user()?.email }}</ion-card-subtitle>
+      </ion-card-header>   
+
+      @if (user()!.me) {
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-button fill="clear" (click)="changeImage()">
+                <ion-icon name="image" color="tertiary"></ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button fill="clear" (click)="changeData()">
+                <ion-icon name="create" color="success"></ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button fill="clear" (click)="changePassword()">
+                <ion-icon name="lock-open" color="secondary"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      }
+    </ion-card>
+
+    @if (coords()) {
+      <bm-map [coords]="coords()!">
+        <bm-marker [coords]="coords()!" color="blue"></bm-marker>
+      </bm-map>
+    }
+  }
+</ion-content>
