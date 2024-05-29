@@ -39,7 +39,7 @@
       }
     </ion-card>
 
-    @if (ratings) {
+    @if (ratings && ratings.length > 0) {
       <ion-title id="valoracion">Valoraciones</ion-title>
       @for (rating of ratings; track $index) {
         <rating-item [rating]="rating"></rating-item>
